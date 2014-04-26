@@ -1,0 +1,19 @@
+This is the sandbox for flibit's XNA Effect support research for FNA.
+
+Current tools include MEPTool, the MojoShader Effect Parsing Tool, and UnXNB, a
+quick and dirty XNB decompressor ganked from FNA.
+
+Unless you're helping out with research, this is probably useless to you.
+
+License
+-------
+MEPTool is released under the zlib license. See meptool.LICENSE for details.
+
+MEPTool uses MojoShader, released under the zlib license.
+See mojoshader.LICENSE for details.
+
+UnXNB is released under the Microsoft Public License.
+See unxnb.LICENSE for details.
+
+UnXNB uses LzxDecoder, released under a dual LGPL/MSPL license.
+See lzxdecoder.LICENSE for details.
