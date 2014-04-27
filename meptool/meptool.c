@@ -78,8 +78,8 @@ int main(int argc, char **argv)
 	const char *profile;
 	MOJOSHADER_glContext *shaderContext;
 	int i;
-	long size;
-	unsigned int shaderOffset;
+	long size = 0;
+	unsigned int shaderOffset = 0;
 	unsigned char *shader;
 
 	if (argc < 2)
