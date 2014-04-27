@@ -126,22 +126,20 @@ int main(int argc, char **argv)
 		if (fileIn == NULL)
 		{
 			printf("%s not opened. Skipping.\n", argv[i]);
+			continue;
 		}
-		else
+		fread(&size, 4, 1, fileIn);
+		fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */
+		fread(&shaderOffset, 4, 1, fileIn);
+		fseek(fileIn, shaderOffset + 4, SEEK_SET);
+		shader = (unsigned char*) malloc(size - shaderOffset);
+		fread(shader, 1, size - shaderOffset, fileIn);
+		fclose(fileIn);
+		if (!do_parse(argv[i], shader, size, profile))
 		{
-			fread(&size, 4, 1, fileIn);
-			fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */
-			fread(&shaderOffset, 4, 1, fileIn);
-			fseek(fileIn, shaderOffset + 4, SEEK_SET);
-			shader = (unsigned char*) malloc(size - shaderOffset);
-			fread(shader, 1, size - shaderOffset, fileIn);
-			fclose(fileIn);
-			if (!do_parse(argv[i], shader, size, profile))
-			{
-				printf("Effect parsing error!\n");
-			}
-			free(shader);
+			printf("Effect parsing error!\n");
 		}
+		free(shader);
 	}
 
 	/* Clean up. We out. */
