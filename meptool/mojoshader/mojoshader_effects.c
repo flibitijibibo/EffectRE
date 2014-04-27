@@ -524,12 +524,37 @@ const MOJOSHADER_effect *MOJOSHADER_parseEffect(const char *profile,
 
             ptr += shadersize;
             len -= shadersize;
+
+            /* flibit "figured this out". */
+            // !!! FIXME: How does this affect numobjects? -flibit
+            while (*((uint32*) ptr) == -1)
+            {
+                /* const uint32 magic = */ readui32(&ptr, &len);
+                /* const uint32 index = */ readui32(&ptr, &len);
+                readui32(&ptr, &len);  // !!! FIXME: what is this field?
+                readui32(&ptr, &len);  // !!! FIXME: what is this field?
+                /*const uint32 type = */ readui32(&ptr, &len);
+                const uint32 mapsize = readui32(&ptr, &len);
+                if (mapsize > 0)
+                {
+                    const uint32 readsize = (((mapsize + 3) / 4) * 4);
+                    if (len < readsize)
+                        goto parseEffect_unexpectedEOF;
+                    else
+                    {
+                        ptr += readsize; // !!! FIXME: Skipping a string! -flibit
+                        len -= readsize;
+                    } // else
+                } // if
+            } // while
+
         } // for
     } // if
 
     // !!! FIXME: we parse this, but don't expose the data, yet.
     // mappings ...
     assert(numshaders <= numobjects);
+#if 0 // !!! FIXME: MAY BE OBSOLETED BY ABOVE CHANGES -flibit
     const uint32 nummappings = numobjects - numshaders;
     if (nummappings > 0)
     {
@@ -552,6 +577,7 @@ const MOJOSHADER_effect *MOJOSHADER_parseEffect(const char *profile,
             } // if
         } // for
     } // if
+#endif
 
     retval->profile = (char *) m(strlen(profile) + 1, d);
     if (retval->profile == NULL)
