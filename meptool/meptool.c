@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 	);
 	MOJOSHADER_glMakeContextCurrent(shaderContext);
 
-	/* Open up the file. This should be straight from EffectReader.Read! */
+	/* Open up the file. This should have come from UnXNB! */
 	for (i = 1; i < argc; i += 1)
 	{
 		FILE *fileIn = fopen(argv[i], "rb");
@@ -136,6 +136,7 @@ int main(int argc, char **argv)
 			fseek(fileIn, shaderOffset, SEEK_SET);
 			shader = (unsigned char*) malloc(size - shaderOffset);
 			fread(shader, 1, size - shaderOffset, fileIn);
+			fclose(fileIn);
 			if (!do_parse(argv[i], shader, size, profile))
 			{
 				printf("Effect parsing error!\n");
