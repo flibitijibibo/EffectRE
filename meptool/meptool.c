@@ -132,8 +132,7 @@ int main(int argc, char **argv)
 			fread(&size, 4, 1, fileIn);
 			fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */
 			fread(&shaderOffset, 4, 1, fileIn);
-			shaderOffset += 4; /* To account for the size uint */
-			fseek(fileIn, shaderOffset, SEEK_SET);
+			fseek(fileIn, shaderOffset + 4, SEEK_SET);
 			shader = (unsigned char*) malloc(size - shaderOffset);
 			fread(shader, 1, size - shaderOffset, fileIn);
 			fclose(fileIn);
