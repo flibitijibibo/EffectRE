@@ -53,8 +53,8 @@ static int do_parse(const char *fname, const unsigned char *buf,
     int retval = 0;
     const MOJOSHADER_effect *effect;
 
-    if ( (buf[0] != 0x01) && (buf[1] != 0x09) &&
-         (buf[2] != 0xFF) && (buf[3] != 0xFE) )
+    if ( (buf[0] != 0x01) || (buf[1] != 0x09) ||
+         (buf[2] != 0xFF) || (buf[3] != 0xFE) )
     {
         printf("%s is not an effect!\n", fname);
         return retval;
