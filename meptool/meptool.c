@@ -129,9 +129,19 @@ int main(int argc, char **argv)
 			continue;
 		}
 		fread(&size, 4, 1, fileIn);
-		fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */
-		fread(&shaderOffset, 4, 1, fileIn);
-		fseek(fileIn, shaderOffset + 4, SEEK_SET);
+		if (size != 0xFEFF0901) /* This is a raw effect! */
+		{
+			/* TODO: WTF is in here...? -flibit */
+			fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */
+			fread(&shaderOffset, 4, 1, fileIn);
+			fseek(fileIn, shaderOffset + 4, SEEK_SET);
+		}
+		else
+		{
+			fseek(fileIn, 0, SEEK_END);
+			size = ftell(fileIn);
+			fseek(fileIn, 0, SEEK_SET);
+		}
 		shader = (unsigned char*) malloc(size - shaderOffset);
 		fread(shader, 1, size - shaderOffset, fileIn);
 		fclose(fileIn);
