@@ -9,10 +9,10 @@ Effect
 	Dispose()
 EffectParameter
 	public EffectAnnotation[] Annotations
-	Name
-	Semantic
-	RowCount
-	ColumnCount
+	public string Name
+	public string Semantic
+	public int RowCount
+	public int ColumnCount
 	ParameterClass
 	ParameterType
 	Elements - More Parameters???
@@ -27,10 +27,10 @@ EffectPass
 	public string Name
 	Apply()
 EffectAnnotation
-	Name
-	Semantic
-	RowCount
-	ColumnCount
+	public string Name
+	public string Semantic
+	public int RowCount
+	public int ColumnCount
 	ParameterClass
 	ParameterType
 
