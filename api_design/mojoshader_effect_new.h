@@ -5,11 +5,8 @@
  * This function maps to ID3DXEffect::SetRawValue.
  *
  * (parameter) is a parameter obtained from a MOJOSHADER_effect*.
- *
  * (data) is the constant values to be applied to the parameter.
- *
  * (offset) is the offset, in bytes, of the parameter data being modified.
- *
  * (len) is the size, in bytes, of the data buffer being applied.
  *
  * This function is thread safe.
@@ -26,13 +23,9 @@ void MOJOSHADER_effectSetRawValueHandle(const MOJOSHADER_effectParameter *parame
  * This function maps to ID3DXEffect::SetRawValue.
  *
  * (effect) is a MOJOSHADER_effect* obtained from MOJOSHADER_parseEffect().
- *
  * (name) is the human-readable name of the parameter being modified.
- *
  * (data) is the constant values to be applied to the parameter.
- *
  * (offset) is the offset, in bytes, of the parameter data being modified.
- *
  * (len) is the size, in bytes, of the data buffer being applied.
  *
  * This function is thread safe.
@@ -62,7 +55,6 @@ MOJOSHADER_effectTechnique *MOJOSHADER_effectGetCurrentTechnique(const MOJOSHADE
  * This function maps to ID3DXEffect::SetTechnique.
  *
  * (effect) is a MOJOSHADER_effect* obtained from MOJOSHADER_parseEffect().
- *
  * (technique) is the technique to be used by the effect when rendered.
  *
  * This function is thread safe.
@@ -75,7 +67,6 @@ void MOJOSHADER_effectSetTechnique(const MOJOSHADER_effect *effect,
  * This function maps to ID3DXEffect::FindNextValidTechnique.
  *
  * (effect) is a MOJOSHADER_effect* obtained from MOJOSHADER_parseEffect().
- *
  * (technique) can either be a technique found in the given effect, or NULL to
  *  find the first technique in the given effect.
  *
@@ -130,17 +121,12 @@ typedef struct MOJOSHADER_effectRenderState
  *    everything that was asked to be saved when this function was called.
  *
  * (effect) is a MOJOSHADER_effect* obtained from MOJOSHADER_parseEffect().
- *
  * (numPasses) will be filled with the number of passes that this technique
  *  will need to fully render.
- *
  * (saveState) is a flag informing the effect what rendering states to preserve
  *  after rendering the technique as well as each individual pass.
- *
  * (renderState) will be filled by the effect to inform you of the render state
  *  changes introduced by the technique and its passes.
- *
- * This function maps to ID3DXEffect::Begin.
  *
  * This function is thread safe.
  */
@@ -197,7 +183,6 @@ void MOJOSHADER_glDeleteEffect(const MOJOSHADER_glEffect *effect);
  *
  * (glEffect) is a MOJOSHADER_glEffect* obtained from
  *  MOJOSHADER_glCompileEffect().
- *
  * (pass) is the index of the effect pass as found in the current technique.
  *
  * This call is NOT thread safe! As most OpenGL implementations are not thread
