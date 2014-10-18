@@ -1,0 +1,104 @@
+/* XNA4 EFFECT API CRASH COURSE (COMICALLY SIMPLIFIED) */
+Effect
+	private IGLEffect INTERNAL_effect;
+	public EffectParameter[] Parameters
+	public EffectTechnique[] Techniques
+	public EffectTechnique CurrentTechnique
+	Effect(byte[] effectCode)
+	Clone()
+	Dispose()
+EffectParameter
+	public EffectAnnotation[] Annotations
+	Name
+	Semantic
+	RowCount
+	ColumnCount
+	ParameterClass
+	ParameterType
+	Elements - More Parameters???
+	StructureMembers - More Parameters???
+	Get/Set Methods - Store locally as Object, InvalidCastOperation
+EffectTechnique
+	public EffectAnnotation[] Annotations
+	public string Name
+	public EffectPass[] Passes
+EffectPass
+	public EffectAnnotation[] Annotations
+	public string Name
+	Apply()
+EffectAnnotation
+	Name
+	Semantic
+	RowCount
+	ColumnCount
+	ParameterClass
+	ParameterType
+
+internal interface IGLEffect
+{
+	IntPtr EffectData
+	{
+		get;
+	}
+	/* TODO: Figure out howtf Apply() maps to Begin/Commit/End! */
+}
+internal class OpenGLEffect : IGLEffect
+{
+	public IntPtr EffectData
+	{
+		get;
+		private set;
+	}
+	private IntPtr glEffect;
+	public OpenGLEffect(IntPtr effectData)
+	{
+		EffectData = effectData;
+		glEffect = MojoShader.MOJOSHADER_glCompileEffect(effectData);
+	}
+}
+
+/* END XNA4 EFFECT API CRASH COURSE (COMICALLY SIMPLIFIED) */
+
+/* ORIGINAL EFFECT API, GROUPED AROUND FOR READABILITY */
+
+/* USED TO BE XNA3 API */
+Begin
+BeginPass
+CommitChanges
+EndPass
+End
+
+/* EffectParameter.SetValue() */
+SetRawValue
+
+/* CurrentTechnique { get; set; } */
+GetCurrentTechnique
+SetTechnique
+
+/* Techniques { get; } */
+FindNextValidTechnique
+
+/* Effect.Clone() */
+CloneEffect
+
+/* N/A? */
+GetStateManager
+SetStateManager
+ValidateTechnique
+
+/* GraphicsResource GraphicsDevice */
+GetDevice
+
+/* GraphicsResource Events */
+OnLostDevice
+OnResetDevice
+
+/* REMOVED IN XNA4 */
+BeginParameterBlock
+EndParameterBlock
+ApplyParameterBlock
+DeleteParameterBlock
+IsParameterUsed
+GetPool
+
+/* END ORIGINAL EFFECT API, GROUPED AROUND FOR READABILITY */
