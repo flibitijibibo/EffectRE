@@ -1,0 +1,3 @@
+[submodule "meptool/mojoshader"]
+	path = meptool/mojoshader
+	url = git://github.com/flibitijibibo/MojoShader.git
