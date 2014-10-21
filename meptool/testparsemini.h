@@ -407,7 +407,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                 INDENT(); printf("    PASS #%d ('%s'):\n", j, pass->name);
                 for (k = 0; k < pass->state_count; k++, state++)
                 {
-                    INDENT(); printf("        STATE 0x%X\n", state->type);
+                    INDENT(); printf("        STATE %d: %d\n", state->type, state->value);
                 } // for
             } // for
             printf("\n");
