@@ -87,24 +87,25 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
              || param->param_type == MOJOSHADER_SYMTYPE_SAMPLERCUBE)
             {
                 printf("    SAMPLER VALUES:\n");
-                for (j = 0; j < param->sampler_state_count; j++)
+                for (j = 0; j < param->value_count; j++)
                 {
-                    if (param->sampler_states[j].type == MOJOSHADER_SAMP_TEXTURE)
+                    MOJOSHADER_effectSamplerState *states = (MOJOSHADER_effectSamplerState *) param->values;
+                    if (states[j].type == MOJOSHADER_SAMP_TEXTURE)
                     {
-                        printf("            TEXTURE #%d\n", param->sampler_states[j].valueI);
+                        printf("            TEXTURE #%d\n", states[j].valueI);
                     }
                     else
                     {
-                        printf("            TYPE: %d -> ", param->sampler_states[j].type);
-                        if (param->sampler_states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
+                        printf("            TYPE: %d -> ", states[j].type);
+                        if (states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
                         {
                             /* float types */
-                            printf("FLOAT: %.2f\n", param->sampler_states[j].valueF);
+                            printf("FLOAT: %.2f\n", states[j].valueF);
                         }
                         else
                         {
                             /* int/enum types */
-                            printf("INT: %d\n", param->sampler_states[j].valueI);
+                            printf("INT: %d\n", states[j].valueI);
                         }
                     }
                 }
