@@ -147,6 +147,17 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             {
                 printf("    TODO: PARSE THIS TYPE -flibit\n");
             }
+
+            if (param->annotation_count > 0)
+            {
+                INDENT();
+                printf("    ANNOTATIONS:\n");
+            } // if
+            for (j = 0; j < param->annotation_count; j++)
+            {
+                INDENT();
+                printf("        %s\n", param->annotations[j].name);
+            } // for
         } // for
 
         printf("\n");
