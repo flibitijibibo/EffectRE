@@ -46,6 +46,137 @@ static void *MojoShaderGLLookup(const char *fnname, void *data)
 
 #include "testparsemini.h"
 
+static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
+                         const unsigned int indent)
+{
+    INDENT(); printf("PROFILE: %s\n", effect->profile);
+    printf("\n");
+    if (effect->error_count > 0)
+    {
+        int i;
+        for (i = 0; i < effect->error_count; i++)
+        {
+            const MOJOSHADER_error *err = &effect->errors[i];
+            INDENT();
+            printf("%s:%d: ERROR: %s\n",
+                    err->filename ? err->filename : fname,
+                    err->error_position, err->error);
+        } // for
+    } // if
+    else
+    {
+        int i, j, k;
+        const MOJOSHADER_effectTechnique *technique = effect->techniques;
+        const MOJOSHADER_effectTexture *texture = effect->textures;
+        const MOJOSHADER_effectShader *shader = effect->shaders;
+        const MOJOSHADER_effectParam *param = effect->params;
+
+        for (i = 0; i < effect->param_count; i++, param++)
+        {
+            INDENT();
+            printf("PARAM #%d '%s' -> '%s'\n", i, param->name, param->semantic);
+            INDENT();
+            printf("    CLASS/TYPE: %d %d\n", param->param_class, param->param_type);
+            INDENT();
+            if (param->param_type == MOJOSHADER_SYMTYPE_SAMPLER
+             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER1D
+             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER2D
+             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER3D
+             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLERCUBE)
+            {
+                printf("        SAMPLER VALUES:\n");
+                for (j = 0; j < param->sampler_state_count; j++)
+                {
+                    printf("            TYPE: %d\n            VALUE: ", param->sampler_states[j].type);
+                    if (param->sampler_states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
+                    {
+                        /* float types */
+                        printf("%f\n", param->sampler_states[j].valueF);
+                    }
+                    else
+                    {
+                        /* int/enum types */
+                        printf("%d\n", param->sampler_states[j].valueI);
+                    }
+                }
+            }
+            else if (param->param_type == MOJOSHADER_SYMTYPE_BOOL)
+            {
+                printf("        BOOL VALUES:");
+                int *bArray = param->values;
+                for (j = 0; j < param->value_count; j++)
+                {
+                    printf(" %d", bArray[j]);
+                }
+                printf("\n");
+            }
+            else if (param->param_type == MOJOSHADER_SYMTYPE_INT)
+            {
+                printf("        INT VALUES:");
+                int *iArray = param->values;
+                for (j = 0; j < param->value_count; j++)
+                {
+                    printf(" %d", iArray[j]);
+                }
+                printf("\n");
+            }
+            else if (param->param_type == MOJOSHADER_SYMTYPE_FLOAT)
+            {
+                printf("        FLOAT VALUES:");
+                float *fArray = param->values;
+                for (j = 0; j < param->value_count; j++)
+                {
+                    printf(" %d", fArray[j]);
+                }
+                printf("\n");
+            }
+            else if (param->param_type == MOJOSHADER_SYMTYPE_TEXTURE)
+            {
+                printf("        TODO: TEXTURE VALUES -flibit\n");
+            }
+            else
+            {
+                printf("        TODO: PARSE THIS TYPE -flibit\n");
+            }
+        } // for
+
+        printf("\n");
+
+        for (i = 0; i < effect->technique_count; i++, technique++)
+        {
+            const MOJOSHADER_effectPass *pass = technique->passes;
+            INDENT(); printf("TECHNIQUE #%d ('%s'):\n", i, technique->name);
+            for (j = 0; j < technique->pass_count; j++, pass++)
+            {
+                const MOJOSHADER_effectState *state = pass->states;
+                INDENT(); printf("    PASS #%d ('%s'):\n", j, pass->name);
+                for (k = 0; k < pass->state_count; k++, state++)
+                {
+                    INDENT(); printf("        STATE %d: %d\n", state->type, state->value);
+                } // for
+            } // for
+            printf("\n");
+        } // for
+
+        for (i = 0; i < effect->texture_count; i++, texture++)
+        {
+            INDENT();
+            printf("TEXTURE #%d ('%s'): %u\n", i,
+                    texture->name, texture->param);
+        } // for
+
+        printf("\n");
+
+        for (i = 0; i < effect->shader_count; i++, shader++)
+        {
+            INDENT();
+            printf("SHADER #%d: technique %u, pass %u\n", i,
+                    shader->technique, shader->pass);
+            print_shader(fname, shader->shader, indent + 1);
+        } // for
+    } // else
+} // print_effect
+
 static int do_parse(const char *fname, const unsigned char *buf,
                     const int len, const char *prof)
 {
