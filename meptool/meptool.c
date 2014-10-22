@@ -103,7 +103,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             else if (param->param_type == MOJOSHADER_SYMTYPE_BOOL)
             {
                 printf("        BOOL VALUES:");
-                int *bArray = param->values;
+                int *bArray = (int *) param->values;
                 for (j = 0; j < param->value_count; j++)
                 {
                     printf(" %d", bArray[j]);
@@ -113,7 +113,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             else if (param->param_type == MOJOSHADER_SYMTYPE_INT)
             {
                 printf("        INT VALUES:");
-                int *iArray = param->values;
+                int *iArray = (int *) param->values;
                 for (j = 0; j < param->value_count; j++)
                 {
                     printf(" %d", iArray[j]);
@@ -123,10 +123,10 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             else if (param->param_type == MOJOSHADER_SYMTYPE_FLOAT)
             {
                 printf("        FLOAT VALUES:");
-                float *fArray = param->values;
+                float *fArray = (float *) param->values;
                 for (j = 0; j < param->value_count; j++)
                 {
-                    printf(" %d", fArray[j]);
+                    printf(" %f", fArray[j]);
                 }
                 printf("\n");
             }
