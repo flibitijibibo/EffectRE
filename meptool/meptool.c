@@ -76,7 +76,9 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             INDENT();
             printf("PARAM #%d '%s' -> '%s'\n", i, param->name, param->semantic);
             INDENT();
-            printf("    CLASS/TYPE: %d %d\n", param->param_class, param->param_type);
+            printf("    CLASS: %d\n", param->param_class);
+            INDENT();
+            printf("    TYPE: %d\n", param->param_type);
             INDENT();
             if (param->param_type == MOJOSHADER_SYMTYPE_SAMPLER
              || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER1D
@@ -84,25 +86,32 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
              || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER3D
              || param->param_type == MOJOSHADER_SYMTYPE_SAMPLERCUBE)
             {
-                printf("        SAMPLER VALUES:\n");
+                printf("    SAMPLER VALUES:\n");
                 for (j = 0; j < param->sampler_state_count; j++)
                 {
-                    printf("            TYPE: %d\n            VALUE: ", param->sampler_states[j].type);
-                    if (param->sampler_states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
+                    if (param->sampler_states[j].type == MOJOSHADER_SAMP_TEXTURE)
                     {
-                        /* float types */
-                        printf("%f\n", param->sampler_states[j].valueF);
+                        printf("            TEXTURE #%d\n", param->sampler_states[j].valueI);
                     }
                     else
                     {
-                        /* int/enum types */
-                        printf("%d\n", param->sampler_states[j].valueI);
+                        printf("            TYPE: %d -> ", param->sampler_states[j].type);
+                        if (param->sampler_states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
+                        {
+                            /* float types */
+                            printf("FLOAT: %.2f\n", param->sampler_states[j].valueF);
+                        }
+                        else
+                        {
+                            /* int/enum types */
+                            printf("INT: %d\n", param->sampler_states[j].valueI);
+                        }
                     }
                 }
             }
             else if (param->param_type == MOJOSHADER_SYMTYPE_BOOL)
             {
-                printf("        BOOL VALUES:");
+                printf("    BOOL VALUES:");
                 int *bArray = (int *) param->values;
                 for (j = 0; j < param->value_count; j++)
                 {
@@ -112,7 +121,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             }
             else if (param->param_type == MOJOSHADER_SYMTYPE_INT)
             {
-                printf("        INT VALUES:");
+                printf("    INT VALUES:");
                 int *iArray = (int *) param->values;
                 for (j = 0; j < param->value_count; j++)
                 {
@@ -122,21 +131,21 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             }
             else if (param->param_type == MOJOSHADER_SYMTYPE_FLOAT)
             {
-                printf("        FLOAT VALUES:");
+                printf("    FLOAT VALUES:");
                 float *fArray = (float *) param->values;
                 for (j = 0; j < param->value_count; j++)
                 {
-                    printf(" %f", fArray[j]);
+                    printf(" %.2f", fArray[j]);
                 }
                 printf("\n");
             }
             else if (param->param_type == MOJOSHADER_SYMTYPE_TEXTURE)
             {
-                printf("        TODO: TEXTURE VALUES -flibit\n");
+                printf("    TODO: TEXTURE VALUES -flibit\n");
             }
             else
             {
-                printf("        TODO: PARSE THIS TYPE -flibit\n");
+                printf("    TODO: PARSE THIS TYPE -flibit\n");
             }
         } // for
 
