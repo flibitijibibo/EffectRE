@@ -68,6 +68,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         int i, j, k;
         const MOJOSHADER_effectTechnique *technique = effect->techniques;
         const MOJOSHADER_effectTexture *texture = effect->textures;
+        const MOJOSHADER_effectString *string = effect->strings;
         const MOJOSHADER_effectShader *shader = effect->shaders;
         const MOJOSHADER_effectParam *param = effect->params;
 
@@ -140,13 +141,15 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                 }
                 printf("\n");
             }
-            else if (param->param_type == MOJOSHADER_SYMTYPE_TEXTURE)
-            {
-                printf("    TODO: TEXTURE VALUES -flibit\n");
-            }
             else
             {
-                printf("    TODO: PARSE THIS TYPE -flibit\n");
+                printf("    OBJECT VALUES:");
+                int *iArray = (int *) param->values;
+                for (j = 0; j < param->value_count; j++)
+                {
+                    printf(" %d", iArray[j]);
+                }
+                printf("\n");
             }
 
             if (param->annotation_count > 0)
@@ -177,6 +180,13 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                 } // for
             } // for
             printf("\n");
+        } // for
+
+        for (i = 0; i < effect->string_count; i++, string++)
+        {
+            INDENT();
+            printf("STRING #%d: %s\n", i,
+                   string->string);
         } // for
 
         for (i = 0; i < effect->texture_count; i++, texture++)
