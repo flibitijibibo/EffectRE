@@ -33,6 +33,7 @@ EffectAnnotation
 	public int ColumnCount
 	ParameterClass
 	ParameterType
+	Get Methods - Store locally as Object, InvalidCastOperation
 
 internal interface IGLEffect
 {
