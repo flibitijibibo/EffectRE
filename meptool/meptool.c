@@ -67,7 +67,6 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
     {
         int i, j, k;
         const MOJOSHADER_effectTechnique *technique = effect->techniques;
-        const MOJOSHADER_effectTexture *texture = effect->textures;
         const MOJOSHADER_effectString *string = effect->strings;
         const MOJOSHADER_effectShader *shader = effect->shaders;
         const MOJOSHADER_effectParam *param = effect->params;
@@ -185,15 +184,8 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         for (i = 0; i < effect->string_count; i++, string++)
         {
             INDENT();
-            printf("STRING #%d: %s\n", i,
-                   string->string);
-        } // for
-
-        for (i = 0; i < effect->texture_count; i++, texture++)
-        {
-            INDENT();
-            printf("TEXTURE #%d ('%s'): %u\n", i,
-                    texture->name, texture->param);
+            printf("STRING #%d: %s: %u\n", i,
+                   string->string, string->index);
         } // for
 
         printf("\n");
