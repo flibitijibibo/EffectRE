@@ -68,7 +68,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         int i, j, k;
         const MOJOSHADER_effectTechnique *technique = effect->techniques;
         const MOJOSHADER_effectString *string = effect->strings;
-        const MOJOSHADER_effectShader *shader = effect->shaders;
+        const MOJOSHADER_effectObject *object = effect->objects;
         const MOJOSHADER_effectParam *param = effect->params;
 
         for (i = 0; i < effect->param_count; i++, param++)
@@ -190,12 +190,24 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
 
         printf("\n");
 
-        for (i = 0; i < effect->shader_count; i++, shader++)
+        for (i = 0; i < effect->object_count; i++, object++)
         {
             INDENT();
-            printf("SHADER #%d: technique %u, pass %u\n", i,
-                    shader->technique, shader->pass);
-            print_shader(fname, shader->shader, indent + 1);
+            if (object->type == MOJOSHADER_OBJECTTYPE_SHADER)
+            {
+                printf("SHADER #%d: technique %u, pass %u\n", i,
+                       object->shader.technique, object->shader.pass);
+                print_shader(fname, object->shader.shader, indent + 1);
+            } // if
+            else if (object->type == MOJOSHADER_OBJECTTYPE_MAPPING)
+            {
+                printf("MAPPING #%d: name '%s', parameter %u\n", i,
+                       object->mapping.name, object->mapping.param);
+            } // else if
+            else
+            {
+                printf("UNKNOWN OBJECT: #%d\n", i);
+            } // else
         } // for
     } // else
 } // print_effect
