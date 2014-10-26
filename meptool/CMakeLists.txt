@@ -28,4 +28,4 @@ SET(MOJOSHADER_SRC
 
 ADD_EXECUTABLE(meptool ${MEP_SRC})
 ADD_LIBRARY(mojoshader-static STATIC ${MOJOSHADER_SRC})
-TARGET_LINK_LIBRARIES(meptool SDL2 mojoshader-static m)
+TARGET_LINK_LIBRARIES(meptool mojoshader-static m)
