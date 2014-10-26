@@ -1,5 +1,33 @@
 /* The following code was ganked from utils/testparse.c in MojoShader. */
 
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
+
+#if MOJOSHADER_DEBUG_MALLOC
+static void *Malloc(int len)
+{
+    void *ptr = malloc(len + sizeof (int));
+    int *store = (int *) ptr;
+    printf("malloc() %d bytes (%p)\n", len, ptr);
+    if (ptr == NULL) return NULL;
+    *store = len;
+    return (void *) (store + 1);
+} // Malloc
+
+
+static void Free(void *_ptr)
+{
+    int *ptr = (((int *) _ptr) - 1);
+    int len = *ptr;
+    printf("free() %d bytes (%p)\n", len, ptr);
+    free(ptr);
+} // Free
+#else
+#define Malloc NULL
+#define Free NULL
+#endif
+
 static inline void do_indent(const unsigned int indent)
 {
     unsigned int i;
@@ -362,3 +390,36 @@ static void print_shader(const char *fname, const MOJOSHADER_parseData *pd,
 
     printf("\n\n");
 } // print_shader
+
+
+static int do_parse(const char *fname, const unsigned char *buf,
+                    const int len, const char *prof)
+{
+    int retval = 0;
+
+    // magic for an effects file (!!! FIXME: I _think_).
+    if ( (buf[0] == 0x01) && (buf[1] == 0x09) &&
+         (buf[2] == 0xFF) && (buf[3] == 0xFE) )
+    {
+        const MOJOSHADER_effect *effect;
+        effect = MOJOSHADER_parseEffect(prof, buf, len, NULL, 0,
+                                        NULL, 0, Malloc, Free, 0);
+        retval = (effect->error_count == 0);
+        printf("EFFECT: %s\n", fname);
+        print_effect(fname, effect, 1);
+        MOJOSHADER_freeEffect(effect);
+    } // if
+
+    else  // do it as a regular compiled shader.
+    {
+        const MOJOSHADER_parseData *pd;
+        pd = MOJOSHADER_parse(prof, buf, len, NULL, 0,
+                              NULL, 0, Malloc, Free, NULL);
+        retval = (pd->error_count == 0);
+        printf("SHADER: %s\n", fname);
+        print_shader(fname, pd, 1);
+        MOJOSHADER_freeParseData(pd);
+    } // else
+
+    return retval;
+} // do_parse
