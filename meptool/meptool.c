@@ -24,7 +24,7 @@
  *
  */
 
-#define MEPTOOL_SHADER_PROFILE "glsl"
+#define MEPTOOL_SHADER_PROFILE "glsl120"
 
 #include <stdio.h>
 #include <stdlib.h>
