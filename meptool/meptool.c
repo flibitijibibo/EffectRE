@@ -243,19 +243,19 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         for (i = 1; i < effect->object_count; i++, object++)
         {
             INDENT();
-            if (object->type == MOJOSHADER_OBJECTTYPE_SHADER)
+            if (object->type == MOJOSHADER_SYMTYPE_PIXELSHADER) // Arbitrary...
             {
                 printf("SHADER #%d: technique %u, pass %u\n", i,
                        object->shader.technique, object->shader.pass);
                 print_shader(fname, object->shader.shader, indent + 1);
             } // if
-            else if (object->type == MOJOSHADER_OBJECTTYPE_MAPPING)
+            else if (object->type == MOJOSHADER_SYMTYPE_SAMPLER) // Arbitrary...
                 printf("MAPPING #%d: name '%s', parameter %u\n", i,
                        object->mapping.name, object->mapping.param);
-            else if (object->type == MOJOSHADER_OBJECTTYPE_STRING)
+            else if (object->type == MOJOSHADER_SYMTYPE_STRING)
                 printf("STRING #%d: '%s', parameter %u\n", i,
                        object->string.string, object->string.index);
-            else if (object->type == MOJOSHADER_OBJECTTYPE_TEXTURE)
+            else if (object->type == MOJOSHADER_SYMTYPE_TEXTURE) // Arbitrary...
                 printf("TEXTURE #%d: register %d\n", i,
                        object->texture.tex_register);
             else
