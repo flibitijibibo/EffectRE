@@ -197,7 +197,6 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
     {
         int i, j, k, l;
         const MOJOSHADER_effectTechnique *technique = effect->techniques;
-        const MOJOSHADER_effectString *string = effect->strings;
         const MOJOSHADER_effectObject *object = effect->objects;
         const MOJOSHADER_effectParam *param = effect->params;
 
@@ -239,15 +238,9 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         } // for
         printf("\n");
 
-        for (i = 0; i < effect->string_count; i++, string++)
-        {
-            INDENT();
-            printf("STRING #%d: %s: %u\n", i,
-                   string->string, string->index);
-        } // for
-        printf("\n");
-
-        for (i = 0; i < effect->object_count; i++, object++)
+        /* Start at index 1, 0 is always empty (thanks Microsoft!) */
+        object++;
+        for (i = 1; i < effect->object_count; i++, object++)
         {
             INDENT();
             if (object->type == MOJOSHADER_OBJECTTYPE_SHADER)
@@ -257,14 +250,16 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                 print_shader(fname, object->shader.shader, indent + 1);
             } // if
             else if (object->type == MOJOSHADER_OBJECTTYPE_MAPPING)
-            {
                 printf("MAPPING #%d: name '%s', parameter %u\n", i,
                        object->mapping.name, object->mapping.param);
-            } // else if
+            else if (object->type == MOJOSHADER_OBJECTTYPE_STRING)
+                printf("STRING #%d: '%s', parameter %u\n", i,
+                       object->string.string, object->string.index);
+            else if (object->type == MOJOSHADER_OBJECTTYPE_TEXTURE)
+                printf("TEXTURE #%d: register %d\n", i,
+                       object->texture.tex_register);
             else
-            {
                 printf("UNKNOWN OBJECT: #%d\n", i);
-            } // else
         } // for
     } // else
 } // print_effect
