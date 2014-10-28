@@ -56,7 +56,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
     } // if
     else
     {
-        int i, j, k;
+        int i, j, k, l;
         const MOJOSHADER_effectTechnique *technique = effect->techniques;
         const MOJOSHADER_effectString *string = effect->strings;
         const MOJOSHADER_effectObject *object = effect->objects;
@@ -166,7 +166,12 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                 INDENT(); printf("    PASS #%d ('%s'):\n", j, pass->name);
                 for (k = 0; k < pass->state_count; k++, state++)
                 {
-                    INDENT(); printf("        STATE %d: %d\n", state->type, state->value);
+                    INDENT(); printf("        STATE %d:", state->type);
+                    for (l = 0; l < state->value_count; l++)
+                    {
+                        printf(" %d", *((int *) state->values));
+                    } // for
+                    printf("\n");
                 } // for
             } // for
             printf("\n");
