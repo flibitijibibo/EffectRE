@@ -83,7 +83,8 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                     MOJOSHADER_effectSamplerState *states = (MOJOSHADER_effectSamplerState *) param->values;
                     if (states[j].type == MOJOSHADER_SAMP_TEXTURE)
                     {
-                        printf("            TEXTURE #%d\n", states[j].valueI);
+                        /* FIXME: Multiple values? */
+                        printf("            TEXTURE #%d\n", *((int*) states[j].valuesI));
                     }
                     else
                     {
@@ -91,12 +92,14 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                         if (states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
                         {
                             /* float types */
-                            printf("FLOAT: %.2f\n", states[j].valueF);
+                            /* FIXME: Multiple values? */
+                            printf("FLOAT: %.2f\n", *((float*) states[j].valuesF));
                         }
                         else
                         {
                             /* int/enum types */
-                            printf("INT: %d\n", states[j].valueI);
+                            /* FIXME: Multiple values? */
+                            printf("INT: %d\n", *((int*) states[j].valuesI));
                         }
                     }
                 }
