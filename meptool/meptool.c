@@ -243,21 +243,30 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         for (i = 1; i < effect->object_count; i++, object++)
         {
             INDENT();
-            if (object->type == MOJOSHADER_SYMTYPE_PIXELSHADER) // Arbitrary...
+            if (object->type == MOJOSHADER_SYMTYPE_PIXELSHADER
+             || object->type == MOJOSHADER_SYMTYPE_VERTEXSHADER)
             {
-                printf("SHADER #%d: technique %u, pass %u\n", i,
+                printf("OBJECT #%d: SHADER, technique %u, pass %u\n", i,
                        object->shader.technique, object->shader.pass);
                 print_shader(fname, object->shader.shader, indent + 1);
             } // if
-            else if (object->type == MOJOSHADER_SYMTYPE_SAMPLER) // Arbitrary...
-                printf("MAPPING #%d: name '%s', parameter %u\n", i,
-                       object->mapping.name, object->mapping.param);
             else if (object->type == MOJOSHADER_SYMTYPE_STRING)
-                printf("STRING #%d: '%s', parameter %u\n", i,
+                printf("OBJECT #%d: STRING, '%s', index %d\n", i,
                        object->string.string, object->string.index);
-            else if (object->type == MOJOSHADER_SYMTYPE_TEXTURE) // Arbitrary...
-                printf("TEXTURE #%d: register %d\n", i,
-                       object->texture.tex_register);
+            else if (object->type == MOJOSHADER_SYMTYPE_SAMPLER
+                  || object->type == MOJOSHADER_SYMTYPE_SAMPLER1D
+                  || object->type == MOJOSHADER_SYMTYPE_SAMPLER2D
+                  || object->type == MOJOSHADER_SYMTYPE_SAMPLER3D
+                  || object->type == MOJOSHADER_SYMTYPE_SAMPLERCUBE)
+                printf("OBJECT #%d: MAPPING, '%s', parameter %u\n", i,
+                       object->mapping.name, object->mapping.param);
+            else if (object->type == MOJOSHADER_SYMTYPE_TEXTURE
+                  || object->type == MOJOSHADER_SYMTYPE_TEXTURE1D
+                  || object->type == MOJOSHADER_SYMTYPE_TEXTURE2D
+                  || object->type == MOJOSHADER_SYMTYPE_TEXTURE3D
+                  || object->type == MOJOSHADER_SYMTYPE_TEXTURECUBE)
+                printf("OBJECT #%d: TEXTURE, index %d, register %d\n", i,
+                       object->texture.index, object->texture.tex_register);
             else
                 printf("UNKNOWN OBJECT: #%d\n", i);
         } // for
