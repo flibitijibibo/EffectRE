@@ -37,10 +37,149 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
 
 #include "testparsemini.h"
 
+static void print_value(const MOJOSHADER_effectValue *value,
+                        const unsigned int indent)
+{
+    int i;
+
+    INDENT();
+    printf("VALUE: %s -> %s\n", value->name, value->semantic);
+
+    static const char *classes[] =
+    {
+        "SCALAR",
+        "VECTOR",
+        "ROW-MAJOR MATRIX",
+        "COLUMN-MAJOR MATRIX",
+        "OBJECT",
+        "STRUCT"
+    };
+    static const char *types[] =
+    {
+        "VOID",
+        "BOOL",
+        "INT",
+        "FLOAT",
+        "STRING",
+        "TEXTURE",
+        "TEXTURE1D",
+        "TEXTURE2D",
+        "TEXTURE3D",
+        "TEXTURECUBE",
+        "SAMPLER",
+        "SAMPLER1D",
+        "SAMPLER2D",
+        "SAMPLER3D",
+        "SAMPLERCUBE",
+        "PIXELSHADER",
+        "VERTEXSHADER",
+        "UNSUPPORTED"
+    };
+    do_indent(indent + 1);
+    printf("CLASS: %s\n", classes[value->value_class]);
+    do_indent(indent + 1);
+    printf("TYPE: %s\n", types[value->value_type]);
+
+    do_indent(indent + 1);
+    printf("ROWS/COLUMNS/ELEMENTS: %d, %d, %d\n",
+           value->row_count, value->column_count, value->element_count);
+    do_indent(indent + 1);
+    printf("TOTAL VALUES: %d\n", value->value_count);
+
+    if (value->value_type == MOJOSHADER_SYMTYPE_SAMPLER
+     || value->value_type == MOJOSHADER_SYMTYPE_SAMPLER1D
+     || value->value_type == MOJOSHADER_SYMTYPE_SAMPLER2D
+     || value->value_type == MOJOSHADER_SYMTYPE_SAMPLER3D
+     || value->value_type == MOJOSHADER_SYMTYPE_SAMPLERCUBE)
+    {
+        do_indent(indent + 1);
+        printf("SAMPLER VALUES:\n");
+        for (i = 0; i < value->value_count; i++)
+        {
+            MOJOSHADER_effectSamplerState *state = &value->valuesSS[i];
+
+            static const char *samplerstatetypes[] =
+            {
+                "UNKNOWN0",
+                "UNKNOWN1",
+                "UNKNOWN2",
+                "UNKNOWN3",
+                "TEXTURE",
+                "ADDRESSU",
+                "ADDRESSV",
+                "ADDRESSW",
+                "BORDERCOLOR",
+                "MAGFILTER",
+                "MINFILTER",
+                "MIPFILTER",
+                "MIPMAPLODBIAS",
+                "MAXMIPLEVEL",
+                "MAXANISOTROPY",
+                "SRGBTEXTURE",
+                "ELEMENTINDEX",
+                "DMAPOFFSET",
+            };
+            do_indent(indent + 2);
+            printf("TYPE: %s -> ", samplerstatetypes[state->type]);
+
+            /* Assuming only one value per state! */
+            if (state->type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
+            {
+                /* float types */
+                printf("%.2f\n", *state->value.valuesF);
+            } // if
+            else
+            {
+                /* int/enum types */
+                printf("%d\n", *state->value.valuesI);
+            } // else
+        } // for
+    } // if
+    else
+    {
+        do_indent(indent + 1);
+        printf("%s VALUES:\n", types[value->value_type]);
+        for (i = 0; i < value->value_count; i++)
+        {
+            do_indent(indent + 2);
+            static const char *prints[] =
+            {
+                "%X\n",
+                "%d\n",
+                "%d\n",
+                "%.2f\n",
+                "%d\n",
+                "%d\n",
+                "%d\n",
+                "%d\n",
+                "%d\n",
+                "%d\n",
+                "SAMPLER?!\n",
+                "SAMPLER?!\n",
+                "SAMPLER?!\n",
+                "SAMPLER?!\n",
+                "SAMPLER?!\n",
+                "%d\n",
+                "%d\n",
+                "%X\n"
+            };
+            if (value->value_type == MOJOSHADER_SYMTYPE_FLOAT)
+            {
+                printf(prints[value->value_type], value->valuesF[i]);
+            }
+            else
+            {
+                printf(prints[value->value_type], value->valuesI[i]);
+            }
+        } // for
+    } // else
+} // print_value
+
 static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                          const unsigned int indent)
 {
-    INDENT(); printf("PROFILE: %s\n", effect->profile);
+    INDENT();
+    printf("PROFILE: %s\n", effect->profile);
     printf("\n");
     if (effect->error_count > 0)
     {
@@ -65,120 +204,40 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
         for (i = 0; i < effect->param_count; i++, param++)
         {
             INDENT();
-            printf("PARAM #%d '%s' -> '%s'\n", i, param->name, param->semantic);
-            INDENT();
-            printf("    CLASS: %d\n", param->param_class);
-            INDENT();
-            printf("    TYPE: %d\n", param->param_type);
-            INDENT();
-            if (param->param_type == MOJOSHADER_SYMTYPE_SAMPLER
-             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER1D
-             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER2D
-             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLER3D
-             || param->param_type == MOJOSHADER_SYMTYPE_SAMPLERCUBE)
-            {
-                printf("    SAMPLER VALUES:\n");
-                for (j = 0; j < param->value_count; j++)
-                {
-                    MOJOSHADER_effectSamplerState *states = (MOJOSHADER_effectSamplerState *) param->values;
-                    if (states[j].type == MOJOSHADER_SAMP_TEXTURE)
-                    {
-                        /* FIXME: Multiple values? */
-                        printf("            TEXTURE #%d\n", *((int*) states[j].valuesI));
-                    }
-                    else
-                    {
-                        printf("            TYPE: %d -> ", states[j].type);
-                        if (states[j].type == MOJOSHADER_SAMP_MIPMAPLODBIAS)
-                        {
-                            /* float types */
-                            /* FIXME: Multiple values? */
-                            printf("FLOAT: %.2f\n", *((float*) states[j].valuesF));
-                        }
-                        else
-                        {
-                            /* int/enum types */
-                            /* FIXME: Multiple values? */
-                            printf("INT: %d\n", *((int*) states[j].valuesI));
-                        }
-                    }
-                }
-            }
-            else if (param->param_type == MOJOSHADER_SYMTYPE_BOOL)
-            {
-                printf("    BOOL VALUES:");
-                int *bArray = (int *) param->values;
-                for (j = 0; j < param->value_count; j++)
-                {
-                    printf(" %d", bArray[j]);
-                }
-                printf("\n");
-            }
-            else if (param->param_type == MOJOSHADER_SYMTYPE_INT)
-            {
-                printf("    INT VALUES:");
-                int *iArray = (int *) param->values;
-                for (j = 0; j < param->value_count; j++)
-                {
-                    printf(" %d", iArray[j]);
-                }
-                printf("\n");
-            }
-            else if (param->param_type == MOJOSHADER_SYMTYPE_FLOAT)
-            {
-                printf("    FLOAT VALUES:");
-                float *fArray = (float *) param->values;
-                for (j = 0; j < param->value_count; j++)
-                {
-                    printf(" %.2f", fArray[j]);
-                }
-                printf("\n");
-            }
-            else
-            {
-                printf("    OBJECT VALUES:");
-                int *iArray = (int *) param->values;
-                for (j = 0; j < param->value_count; j++)
-                {
-                    printf(" %d", iArray[j]);
-                }
-                printf("\n");
-            }
+            printf("PARAM #%d\n", i);
+            print_value(&param->value, indent + 1);
 
             if (param->annotation_count > 0)
             {
-                INDENT();
-                printf("    ANNOTATIONS:\n");
+                do_indent(indent + 1);
+                printf("ANNOTATIONS:\n");
             } // if
             for (j = 0; j < param->annotation_count; j++)
             {
-                INDENT();
-                printf("        %s\n", param->annotations[j].name);
+                print_value(&param->annotations[j], indent + 2);
             } // for
         } // for
-
         printf("\n");
 
         for (i = 0; i < effect->technique_count; i++, technique++)
         {
             const MOJOSHADER_effectPass *pass = technique->passes;
-            INDENT(); printf("TECHNIQUE #%d ('%s'):\n", i, technique->name);
+            INDENT();
+            printf("TECHNIQUE #%d ('%s'):\n", i, technique->name);
             for (j = 0; j < technique->pass_count; j++, pass++)
             {
                 const MOJOSHADER_effectState *state = pass->states;
-                INDENT(); printf("    PASS #%d ('%s'):\n", j, pass->name);
+                do_indent(indent + 1);
+                printf("PASS #%d ('%s'):\n", j, pass->name);
                 for (k = 0; k < pass->state_count; k++, state++)
                 {
-                    INDENT(); printf("        STATE %d:", state->type);
-                    for (l = 0; l < state->value_count; l++)
-                    {
-                        printf(" %d", *((int *) state->values));
-                    } // for
-                    printf("\n");
+                    do_indent(indent + 2);
+                    printf("STATE %d:\n", state->type);
+                    print_value(&state->value, indent + 3);
                 } // for
             } // for
-            printf("\n");
         } // for
+        printf("\n");
 
         for (i = 0; i < effect->string_count; i++, string++)
         {
@@ -186,7 +245,6 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             printf("STRING #%d: %s: %u\n", i,
                    string->string, string->index);
         } // for
-
         printf("\n");
 
         for (i = 0; i < effect->object_count; i++, object++)
