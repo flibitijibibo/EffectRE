@@ -46,6 +46,7 @@ static const char *shader_type(const MOJOSHADER_shaderType s)
         case MOJOSHADER_TYPE_PIXEL: return "pixel";
         case MOJOSHADER_TYPE_VERTEX: return "vertex";
         case MOJOSHADER_TYPE_GEOMETRY: return "geometry";
+        case MOJOSHADER_TYPE_EFFECT: return "effect"; /* flibitChange! */
         default: return "(bogus value?)";
     } // switch
 
