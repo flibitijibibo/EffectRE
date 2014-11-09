@@ -195,7 +195,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
     } // if
     else
     {
-        int i, j, k, l;
+        int i, j, k;
         const MOJOSHADER_effectTechnique *technique = effect->techniques;
         const MOJOSHADER_effectObject *object = effect->objects;
         const MOJOSHADER_effectParam *param = effect->params;

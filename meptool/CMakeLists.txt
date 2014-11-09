@@ -9,9 +9,9 @@ OPTION(MEP_DEBUG "Build MEPTool with debugging symbols" ON)
 
 # Compiler Flags
 IF(MEP_DEBUG)
-	SET(CMAKE_CXX_FLAGS "-g -Wall -pedantic")
+	SET(CMAKE_C_FLAGS "-g -Wall")
 ELSE()
-	SET(CMAKE_CXX_FLAGS "-O2 -Wall -pedantic")
+	SET(CMAKE_C_FLAGS "-O2 -Wall")
 ENDIF()
 
 # Defines
