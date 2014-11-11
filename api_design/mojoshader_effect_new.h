@@ -11,7 +11,7 @@
  *
  * This function is thread safe.
  */
-void MOJOSHADER_effectSetRawValueHandle(const MOJOSHADER_effectParameter *parameter,
+void MOJOSHADER_effectSetRawValueHandle(const MOJOSHADER_effectParam *parameter,
                                         const void *data,
                                         const unsigned int offset,
                                         const unsigned int len);
@@ -59,7 +59,7 @@ MOJOSHADER_effectTechnique *MOJOSHADER_effectGetCurrentTechnique(const MOJOSHADE
  *
  * This function is thread safe.
  */
-void MOJOSHADER_effectSetTechnique(const MOJOSHADER_effect *effect,
+void MOJOSHADER_effectSetTechnique(MOJOSHADER_effect *effect,
                                    const MOJOSHADER_effectTechnique *technique);
 
 /* Get the next technique in an effect's list.
@@ -76,7 +76,7 @@ void MOJOSHADER_effectSetTechnique(const MOJOSHADER_effect *effect,
  * This function is thread safe.
  */
 MOJOSHADER_effectTechnique *MOJOSHADER_effectFindNextValidTechnique(const MOJOSHADER_effect *effect,
-                                                                    const MOJOSHADER_technique *technique
+                                                                    const MOJOSHADER_effectTechnique *technique
 );
 
 /* Effect Begin/End interface... */
