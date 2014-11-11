@@ -145,6 +145,8 @@ void MOJOSHADER_effectEnd(MOJOSHADER_effect *effect);
 
 /* OpenGL effect interface... */
 
+typedef struct MOJOSHADER_glEffect MOJOSHADER_glEffect;
+
 /* Fully compile/link the shaders found within the effect.
  *
  * The MOJOSHADER_glEffect* is solely for use within the OpenGL-specific calls.
@@ -173,7 +175,7 @@ MOJOSHADER_glEffect *MOJOSHADER_glCompileEffect(const MOJOSHADER_effect *effect)
  * safe, you should probably only call this from the same thread that created
  * the GL context.
  */
-void MOJOSHADER_glDeleteEffect(const MOJOSHADER_glEffect *effect);
+void MOJOSHADER_glDeleteEffect(MOJOSHADER_glEffect *glEffect);
 
 /* Begin an effect pass from the currently applied technique.
  *
