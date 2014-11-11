@@ -84,22 +84,24 @@ MOJOSHADER_effectTechnique *MOJOSHADER_effectFindNextValidTechnique(const MOJOSH
 /* Used to select which render states should be preserved by the effect pass */
 typedef enum MOJOSHADER_effectSaveState
 {
-    MOJOSHADER_DONOTSAVESTATE =        0x00000001,
-    MOJOSHADER_DONOTSAVESAMPLERSTATE = 0x00000002,
-    MOJOSHADER_DONOTSAVESHADERSTATE =  0x00000003
+    MOJOSHADER_DONOTSAVERENDERSTATE  = 0x00000001,
+    MOJOSHADER_DONOTSAVESHADERSTATE  = 0x00000002, // TODO: Not currently supported!
+    MOJOSHADER_DONOTSAVESAMPLERSTATE = 0x00000004
 } MOJOSHADER_effectSaveState;
 
 /* Used to acquire the desired render state by the effect pass, and to restore
  * state changes introduced by the effect pass.
  */
-typedef struct MOJOSHADER_effectRenderState
+typedef struct MOJOSHADER_effectStateChanges
 {
-    /* TODO: Taking total control of the renderer seems like a bad idea.
-     * Instead, we can give the application what state the Effect wants,
-     * then the application can update the state as needed.
-     * -flibit
-     */
-} MOJOSHADER_effectRenderState;
+    /* Render state changes caused by effect technique */
+    unsigned int render_state_change_count;
+    const MOJOSHADER_effectState *render_state_changes;
+
+    /* Sampler state changes caused by effect technique */
+    unsigned int sampler_state_change_count;
+    const MOJOSHADER_effectSamplerState *sampler_state_changes;
+} MOJOSHADER_effectStateChanges;
 
 /* Prepare the effect for rendering with the currently applied technique.
  *
@@ -113,12 +115,8 @@ typedef struct MOJOSHADER_effectRenderState
  * You should expect the renderState to change in the following ways:
  *  - MOJOSHADER_*EffectBeginPass will update with the render state desired by
  *    the current effect pass.
- *  - MOJOSHADER_*EffectCommitChanges will update with render state changes
- *    made within the active effect pass.
  *  - MOJOSHADER_*EffectEndPass will update with the restored render state,
  *    depending on what state was asked to be saved.
- *  - MOJOSHADER_effectEnd will update with the final render state, restoring
- *    everything that was asked to be saved when this function was called.
  *
  * (effect) is a MOJOSHADER_effect* obtained from MOJOSHADER_parseEffect().
  * (numPasses) will be filled with the number of passes that this technique
@@ -130,10 +128,10 @@ typedef struct MOJOSHADER_effectRenderState
  *
  * This function is thread safe.
  */
-void MOJOSHADER_effectBegin(const MOJOSHADER_effect *effect,
-                            unsigned int *numPasses,
+void MOJOSHADER_effectBegin(MOJOSHADER_effect *effect,
+                            int *numPasses,
                             MOJOSHADER_effectSaveState saveState,
-                            const MOJOSHADER_effectRenderState *renderState);
+                            MOJOSHADER_effectStateChanges *stateChanges);
 
 /* Complete rendering the effect technique, and restore the render state.
  *
@@ -143,7 +141,7 @@ void MOJOSHADER_effectBegin(const MOJOSHADER_effect *effect,
  *
  * This function is thread safe.
  */
-void MOJOSHADER_effectEnd(const MOJOSHADER_effect *effect);
+void MOJOSHADER_effectEnd(MOJOSHADER_effect *effect);
 
 /* OpenGL effect interface... */
 
