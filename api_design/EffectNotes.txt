@@ -51,9 +51,20 @@ internal class OpenGLEffect : IGLEffect
 		private set;
 	}
 	private IntPtr glEffect;
-	public OpenGLEffect(IntPtr effectData)
+	public OpenGLEffect(string profile, byte[] buf)
 	{
-		EffectData = effectData;
+		EffectData = MojoShader.MOJOSHADER_parseEffect(
+			profile,
+			buf,
+			buf.Length,
+			null,
+			0,
+			null,
+			0,
+			null,
+			null,
+			IntPtr.Zero
+		);
 		glEffect = MojoShader.MOJOSHADER_glCompileEffect(effectData);
 	}
 }
