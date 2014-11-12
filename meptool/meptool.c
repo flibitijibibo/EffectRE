@@ -248,9 +248,10 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             {
                 if (object->shader.is_preshader)
                 {
-                    printf("OBJECT #%d: PRESHADER, technique %u, pass %u\n", i,
-                           object->shader.technique, object->shader.pass);
-                    // TODO: print_preshader(object->shader.preshader, indent + 1);
+                    printf("OBJECT #%d: PRESHADER, technique %u, pass %u, param %s\n", i,
+                           object->shader.technique, object->shader.pass,
+                           effect->params[object->shader.preshader_output_param].value.name);
+                    print_preshader(object->shader.preshader, indent + 1);
                 } // if
                 else
                 {
