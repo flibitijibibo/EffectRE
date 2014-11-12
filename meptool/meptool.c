@@ -246,9 +246,18 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
             if (object->type == MOJOSHADER_SYMTYPE_PIXELSHADER
              || object->type == MOJOSHADER_SYMTYPE_VERTEXSHADER)
             {
-                printf("OBJECT #%d: SHADER, technique %u, pass %u\n", i,
-                       object->shader.technique, object->shader.pass);
-                print_shader(fname, object->shader.shader, indent + 1);
+                if (object->shader.is_preshader)
+                {
+                    printf("OBJECT #%d: PRESHADER, technique %u, pass %u\n", i,
+                           object->shader.technique, object->shader.pass);
+                    // TODO: print_preshader(object->shader.preshader, indent + 1);
+                } // if
+                else
+                {
+                    printf("OBJECT #%d: SHADER, technique %u, pass %u\n", i,
+                           object->shader.technique, object->shader.pass);
+                    print_shader(fname, object->shader.shader, indent + 1);
+                } // else
             } // if
             else if (object->type == MOJOSHADER_SYMTYPE_STRING)
                 printf("OBJECT #%d: STRING, '%s'\n", i,
