@@ -278,7 +278,7 @@ int main(int argc, char **argv)
 			GL_TRIANGLES,
 			0,
 			3,
-			1,
+			6,
 			GL_UNSIGNED_SHORT,
 			NULL
 		);
