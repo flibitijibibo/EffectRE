@@ -79,6 +79,22 @@ static void *GetGLProcAddress(const char *name, void *d)
 	return SDL_GL_GetProcAddress(name);
 }
 
+static void GLDebugCallback(
+	GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar *message,
+	GLvoid *userParam
+) {
+	printf("\n%s\n", message);
+	if (type == GL_DEBUG_TYPE_ERROR_ARB)
+	{
+		SDL_assert(0 && "ARB_debug_output found an error.");
+	}
+}
+
 int main(int argc, char **argv)
 {
 	SDL_Window *window;
@@ -99,6 +115,14 @@ int main(int argc, char **argv)
 
 	/* Create the window and GL context */
 	SDL_Init(SDL_INIT_VIDEO);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 	window = SDL_CreateWindow(
 		"Sprite Test",
 		SDL_WINDOWPOS_CENTERED,
@@ -118,10 +142,29 @@ int main(int argc, char **argv)
 	);
 	MOJOSHADER_glMakeContextCurrent(shaderContext);
 
+	/* ARB_debug_output setup */
+	glDebugMessageCallbackARB(GLDebugCallback, NULL);
+	glDebugMessageControlARB(
+		GL_DONT_CARE,
+		GL_DONT_CARE,
+		GL_DONT_CARE,
+		0,
+		NULL,
+		GL_TRUE
+	);
+
 	/* Set up the viewport, create the texture/buffer data */
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0.0f);
 	bitmap = SDL_LoadBMP("../Sprite.bmp");
 	glTexImage2D(
 		GL_TEXTURE_2D,
