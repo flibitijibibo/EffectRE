@@ -250,7 +250,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                 {
                     printf("OBJECT #%d: PRESHADER, technique %u, pass %u, param %s\n", i,
                            object->shader.technique, object->shader.pass,
-                           effect->params[object->shader.preshader_output_param].value.name);
+                           effect->params[object->shader.params[0]].value.name);
                     print_preshader(object->shader.preshader, indent + 1);
                 } // if
                 else
