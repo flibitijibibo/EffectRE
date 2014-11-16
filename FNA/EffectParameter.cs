@@ -70,7 +70,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Private Variables
 
 		private IntPtr parameter;
-		private byte[] values;
+		private IntPtr values;
 
 		#endregion
 
@@ -85,8 +85,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			EffectParameterType parameterType,
 			EffectParameterCollection structureMembers,
 			EffectAnnotationCollection annotations,
-			byte[] data,
-			IntPtr rawParameter
+			IntPtr data
 		) {
 			Name = name;
 			Semantic = semantic;
@@ -97,7 +96,6 @@ namespace Microsoft.Xna.Framework.Graphics
 			StructureMembers = structureMembers;
 			Annotations = annotations;
 			values = data;
-			parameter = rawParameter;
 		}
 
 		#endregion

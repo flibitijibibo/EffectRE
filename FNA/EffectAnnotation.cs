@@ -53,7 +53,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Private Variables
 
-		byte[] values;
+		IntPtr values;
 
 		#endregion
 
@@ -66,7 +66,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int columnCount,
 			EffectParameterClass parameterClass,
 			EffectParameterType parameterType,
-			byte[] data
+			IntPtr data
 		) {
 			Name = name;
 			Semantic = semantic;

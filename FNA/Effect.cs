@@ -212,8 +212,7 @@ namespace Microsoft.Xna.Framework.Graphics
 						param.annotations,
 						param.annotation_count
 					),
-					(byte[]) param.value.values,
-					&paramPtr[i] // FIXME: Can I do this? Please? -flibit
+					param.value.values
 				);
 			}
 			Parameters = new EffectParameterCollection(parameters);
@@ -270,7 +269,7 @@ namespace Microsoft.Xna.Framework.Graphics
 					(int) anno.column_count,
 					XNAClass[anno.value_class],
 					XNAType[anno.value_type],
-					(byte[]) anno.values
+					anno.values
 				);
 			}
 			return new EffectAnnotationCollection(annotations);
