@@ -69,7 +69,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Private Variables
 
-		private IntPtr parameter;
 		private IntPtr values;
 
 		#endregion
