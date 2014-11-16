@@ -166,7 +166,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
 			if (disposing)
 			{
-				graphicsDevice.GLDevice.DeleteEffect(glEffect);
+				GraphicsDevice.GLDevice.DeleteEffect(glEffect);
 			}
 		}
 
