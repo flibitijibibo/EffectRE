@@ -59,7 +59,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Internal Constructor
 
-		internal EffectPassCollection(EffectPass value)
+		internal EffectPassCollection(EffectPass[] value)
 		{
 			elements = value;
 		}

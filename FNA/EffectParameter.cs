@@ -7,6 +7,10 @@
  */
 #endregion
 
+#region Using Statements
+using System;
+#endregion
+
 namespace Microsoft.Xna.Framework.Graphics
 {
 	public sealed class EffectParameter
@@ -59,6 +63,41 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
 			get;
 			private set;
+		}
+
+		#endregion
+
+		#region Private Variables
+
+		private IntPtr parameter;
+		private byte[] values;
+
+		#endregion
+
+		#region Internal Constructor
+
+		internal EffectParameter(
+			string name,
+			string semantic,
+			int rowCount,
+			int columnCount,
+			EffectParameterClass parameterClass,
+			EffectParameterType parameterType,
+			EffectParameterCollection structureMembers,
+			EffectAnnotationCollection annotations,
+			byte[] data,
+			IntPtr rawParameter
+		) {
+			Name = name;
+			Semantic = semantic;
+			RowCount = rowCount;
+			ColumnCount = columnCount;
+			ParameterClass = parameterClass;
+			ParameterType = parameterType;
+			StructureMembers = structureMembers;
+			Annotations = annotations;
+			values = data;
+			parameter = rawParameter;
 		}
 
 		#endregion

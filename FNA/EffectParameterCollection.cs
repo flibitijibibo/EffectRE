@@ -59,7 +59,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Internal Constructor
 
-		internal EffectParameterCollection(EffectParameter value)
+		internal EffectParameterCollection(EffectParameter[] value)
 		{
 			elements = value;
 		}

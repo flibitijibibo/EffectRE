@@ -59,7 +59,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Internal Constructor
 
-		internal EffectTechniqueCollection(EffectTechnique value)
+		internal EffectTechniqueCollection(EffectTechnique[] value)
 		{
 			elements = value;
 		}

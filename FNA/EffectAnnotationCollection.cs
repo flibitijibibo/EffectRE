@@ -59,7 +59,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Internal Constructor
 
-		internal EffectAnnotationCollection(EffectAnnotation value)
+		internal EffectAnnotationCollection(EffectAnnotation[] value)
 		{
 			elements = value;
 		}

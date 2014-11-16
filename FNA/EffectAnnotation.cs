@@ -51,6 +51,34 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#endregion
 
+		#region Private Variables
+
+		byte[] values;
+
+		#endregion
+
+		#region Internal Constructor
+
+		internal EffectAnnotation(
+			string name,
+			string semantic,
+			int rowCount,
+			int columnCount,
+			EffectParameterClass parameterClass,
+			EffectParameterType parameterType,
+			byte[] data
+		) {
+			Name = name;
+			Semantic = semantic;
+			RowCount = rowCount;
+			ColumnCount = columnCount;
+			ParameterClass = parameterClass;
+			ParameterType = parameterType;
+			values = data;
+		}
+
+		#endregion
+
 		#region Public Methods
 
 		public bool GetValueBoolean()

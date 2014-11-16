@@ -32,5 +32,19 @@ namespace Microsoft.Xna.Framework.Graphics
 		}
 
 		#endregion
+
+		#region Internal Constructor
+
+		internal EffectTechnique(
+			string name,
+			EffectPassCollection passes,
+			EffectAnnotationCollection annotations
+		) {
+			Name = name;
+			Passes = passes;
+			Annotations = annotations;
+		}
+
+		#endregion
 	}
 }

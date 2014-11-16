@@ -27,10 +27,35 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#endregion
 
+		#region Private Variables
+
+		private Effect parentEffect;
+		private uint pass;
+
+		#endregion
+
+		#region Internal Constructor
+
+		internal EffectPass(
+			string name,
+			EffectAnnotationCollection annotations,
+			Effect parent,
+			uint passIndex;
+		) {
+			Name = name;
+			Annotations = annotations;
+			parentEffect = parent;
+			pass = passIndex;
+		}
+
+		#endregion
+
 		#region Public Methods
 
 		public void Apply()
 		{
+			parentEffect.OnApply();
+			parentEffect.INTERNAL_applyEffect(pass);
 		}
 
 		#endregion
