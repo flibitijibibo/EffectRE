@@ -166,6 +166,17 @@ static void print_preshader_operand(const MOJOSHADER_preshader *preshader,
             if (operand->type == MOJOSHADER_PRESHADEROPERAND_TEMP)
                 regch = 'r';
 
+            // Begin flibitChanges!
+            if (operand->array_register_count > 0)
+            {
+                for (i = operand->array_register_count - 1; i >= 0; i--)
+                    printf("c%d[", operand->array_registers[i]);
+                printf("%c%d.%c", regch, operand->index / 4, mask[idx]);
+                for (i = 0; i < operand->array_register_count; i++)
+                    printf("]");
+                break;
+            } // if
+            // End flibitChanges!
             printf("%c%d", regch, operand->index / 4);
             if (isscalar)
                 printf(".%c", mask[idx]);
