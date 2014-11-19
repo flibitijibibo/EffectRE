@@ -195,7 +195,7 @@ int main(int argc, char **argv)
 	);
 
 	/* Load and read the SpriteBatch effect file */
-	fileIn = fopen("../../FNA/StockEffects/FXB/SpriteEffect.fxb", "rb");
+	fileIn = fopen("../SpriteEffect.fxb", "rb");
 	fseek(fileIn, 0, SEEK_END);
 	fileLen = ftell(fileIn);
 	fseek(fileIn, 0, SEEK_SET);
