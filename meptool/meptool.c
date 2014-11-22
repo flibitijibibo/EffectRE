@@ -275,8 +275,7 @@ static void print_effect(const char *fname, const MOJOSHADER_effect *effect,
                   || object->type == MOJOSHADER_SYMTYPE_TEXTURE2D
                   || object->type == MOJOSHADER_SYMTYPE_TEXTURE3D
                   || object->type == MOJOSHADER_SYMTYPE_TEXTURECUBE)
-                printf("OBJECT #%d: TEXTURE, register %d\n", i,
-                       object->texture.tex_register);
+                printf("OBJECT #%d: TEXTURE\n", i);
             else
                 printf("UNKNOWN OBJECT: #%d\n", i);
         } // for
