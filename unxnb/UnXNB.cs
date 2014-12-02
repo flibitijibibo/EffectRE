@@ -43,7 +43,20 @@ public class UnXNB
 				}
 				if ((reader.ReadByte() & 0x80) == 0)
 				{
-					Console.WriteLine("XNB not compressed!");
+					reader.ReadInt32(); // file size
+					reader.ReadByte(); // 7-bit encoded int
+					int strlen = reader.ReadByte();
+					int skip = reader.ReadByte();
+					reader.ReadBytes(strlen);
+					reader.ReadBytes(skip);
+					reader.ReadByte(); // ???
+					reader.ReadInt32(); // ???
+					using (FileStream fileOut = new FileStream(
+						Path.GetFileNameWithoutExtension(args[i]) + ".fxb",
+						FileMode.Create
+					)) {
+						fileIn.CopyTo(fileOut);
+					}
 					continue;
 				}
 				int compressedSize = reader.ReadInt32();
