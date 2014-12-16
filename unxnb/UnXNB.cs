@@ -51,12 +51,14 @@ public class UnXNB
 					reader.ReadBytes(skip);
 					reader.ReadByte(); // ???
 					reader.ReadInt32(); // ???
-					using (FileStream fileOut = new FileStream(
+					int length = reader.ReadInt32();
+					reader.ReadInt32(); // ???
+					int offset = reader.ReadInt32();
+					reader.ReadBytes(offset - 8); // ???
+					File.WriteAllBytes(
 						Path.GetFileNameWithoutExtension(args[i]) + ".fxb",
-						FileMode.Create
-					)) {
-						fileIn.CopyTo(fileOut);
-					}
+						reader.ReadBytes(length - offset)
+					);
 					continue;
 				}
 				int compressedSize = reader.ReadInt32();
@@ -111,16 +113,20 @@ public class UnXNB
 			// Write to file, cutting out initial XNA crap
 			decompressedStream.Seek(0, SeekOrigin.Begin);
 			using (BinaryReader trim = new BinaryReader(decompressedStream))
-			using (FileStream fileOut = new FileStream(
-				Path.GetFileNameWithoutExtension(args[i]) + ".fxb",
-				FileMode.Create
-			)) {
+			{
 				trim.ReadByte();	// 7-bit encoded int
 				trim.ReadString();	// Type info
 				trim.ReadUInt32();	// Version?
 				trim.ReadByte();	// 7-bit encoded int
 				trim.ReadByte();	// 7-bit encoded int
-				decompressedStream.CopyTo(fileOut);
+				int length = trim.ReadInt32();
+				trim.ReadInt32(); // ???
+				int offset = trim.ReadInt32();
+				trim.ReadBytes(offset - 8); // ???
+				File.WriteAllBytes(
+					Path.GetFileNameWithoutExtension(args[i]) + ".fxb",
+					trim.ReadBytes(length - offset)
+				);
 			}
 			decompressedStream.Close();
 		}
