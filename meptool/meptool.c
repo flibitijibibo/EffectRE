@@ -307,7 +307,7 @@ int main(int argc, char **argv)
 			continue;
 		}
 		fread(&size, 4, 1, fileIn);
-		if (size != 0xFEFF0901) /* This is a raw effect! */
+		if (size != 0xFEFF0901 && size != 0xBCF00BCF) /* This is a raw effect! */
 		{
 			/* TODO: WTF is in here...? -flibit */
 			fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */

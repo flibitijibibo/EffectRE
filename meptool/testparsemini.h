@@ -409,8 +409,10 @@ static int do_parse(const char *fname, const unsigned char *buf,
     int retval = 0;
 
     // magic for an effects file (!!! FIXME: I _think_).
-    if ( (buf[0] == 0x01) && (buf[1] == 0x09) &&
-         (buf[2] == 0xFF) && (buf[3] == 0xFE) )
+    if ( ((buf[0] == 0x01) && (buf[1] == 0x09) &&
+          (buf[2] == 0xFF) && (buf[3] == 0xFE)) ||
+         ((buf[0] == 0xCF) && (buf[1] == 0x0B) &&
+          (buf[2] == 0xF0) && (buf[3] == 0xBC)) )
     {
         const MOJOSHADER_effect *effect;
         effect = MOJOSHADER_parseEffect(prof, buf, len, NULL, 0,
