@@ -288,7 +288,6 @@ int main(int argc, char **argv)
 {
 	int i;
 	long size = 0;
-	unsigned int shaderOffset = 0;
 	unsigned char *shader;
 
 	if (argc < 2)
@@ -306,22 +305,11 @@ int main(int argc, char **argv)
 			printf("%s not opened. Skipping.\n", argv[i]);
 			continue;
 		}
-		fread(&size, 4, 1, fileIn);
-		if (size != 0xFEFF0901 && size != 0xBCF00BCF) /* This is a raw effect! */
-		{
-			/* TODO: WTF is in here...? -flibit */
-			fseek(fileIn, 4, SEEK_CUR); /* Skip "first" uint. */
-			fread(&shaderOffset, 4, 1, fileIn);
-			fseek(fileIn, shaderOffset + 4, SEEK_SET);
-		}
-		else
-		{
-			fseek(fileIn, 0, SEEK_END);
-			size = ftell(fileIn);
-			fseek(fileIn, 0, SEEK_SET);
-		}
-		shader = (unsigned char*) malloc(size - shaderOffset);
-		fread(shader, 1, size - shaderOffset, fileIn);
+		fseek(fileIn, 0, SEEK_END);
+		size = ftell(fileIn);
+		fseek(fileIn, 0, SEEK_SET);
+		shader = (unsigned char*) malloc(size);
+		fread(shader, 1, size, fileIn);
 		fclose(fileIn);
 		if (!do_parse(argv[i], shader, size, MEPTOOL_SHADER_PROFILE))
 		{
