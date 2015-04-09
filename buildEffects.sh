@@ -7,7 +7,7 @@ set -e
 
 cd "`dirname "$0"`"
 
-FILES=`ls $1`
+FILES=`ls $1 | grep '\.fx$'`
 for f in $FILES
 do
 	WINEDEBUG=fixme-all,err-all wine fxc.exe /T fx_2_0 $1/$f /Fo "$2/`basename $f .fx`.fxb"
