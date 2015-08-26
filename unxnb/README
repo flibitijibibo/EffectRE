@@ -1,0 +1,9 @@
+This is UnXNB, a quick and dirty XNB decompressor ganked from FNA.
+
+License
+-------
+UnXNB is released under the Microsoft Public License.
+See unxnb.LICENSE for details.
+
+UnXNB uses LzxDecoder, released under a dual LGPL/MSPL license.
+See lzxdecoder.LICENSE for details.
